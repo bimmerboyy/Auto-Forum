@@ -214,4 +214,11 @@ return [
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
+    'middleware' => [
+        Illuminate\Session\Middleware\StartSession::class,
+        // Other middleware...
+    ],
+
+
+
 ];
