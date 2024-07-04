@@ -26,7 +26,7 @@ return new class extends Migration
             $table->char('gender');
             $table->string('profile_picture')->nullable()->default(null);
             $table->string('usertype')->default('user');
-            $table->string('status')->default('approved');
+            $table->string('status')->default('pending');
             $table->rememberToken();
             $table->timestamps();
         });

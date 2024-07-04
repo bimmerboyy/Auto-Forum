@@ -2,7 +2,17 @@
 
 @section('content')
 <div class="container w-100 d-flex justify-content-center">
-    <form style="width:500px" action="{{route('register.index') }}" method="POST">
+    <form style="width:500px" action="{{ route('register.store') }}" method="POST" enctype="multipart/form-data">
+        @if (session('status'))
+        <div class="alert alert-danger">
+        {{ session('status') }}
+        </div>
+        @endif
+        @if(session()->has('message'))
+        <div class="alert alert-primary" role="alert">
+        {{ session()->get('message') }}
+        </div>
+        @endif
         @csrf
         <div class="mb-3 input-control">
             <label for="exampleInputName" class="form-label">Ime</label>
@@ -97,13 +107,13 @@
         </div>
           <p>Pol</p>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" checked>
+            <input class="form-check-input" type="radio" name="gender" value="M" id="flexRadioDefault1" checked>
             <label class="form-check-label" for="flexRadioDefault1">
               Muško
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2">
+            <input class="form-check-input" type="radio" name="gender" value="Ž" id="flexRadioDefault2">
             <label class="form-check-label" for="flexRadioDefault2">
               Žensko
             </label>

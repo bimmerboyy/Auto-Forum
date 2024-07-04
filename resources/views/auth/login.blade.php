@@ -18,7 +18,7 @@
         @endif
 
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <label style="margin-top:20px;" for="exampleInputEmail1" class="form-label">Email</label>
             <input type="email" class="form-control @error('email') border border-danger @enderror"
             class="email" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ old('email') }}">
             @error('email')

@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApprovalMiddleware
 {
@@ -14,16 +15,20 @@ class ApprovalMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
 
+     public function handle(Request $request, Closure $next): Response
+     {
+         $route = $request->route();
+         if ($route && in_array($route->getName(), ['login', 'login'])) {
+             return $next($request);
+         }
 
-        // Check if the user is authenticated and approved
-        if (Auth::check() && Auth::user()->status !== 'approved') {
-            // Redirect the user to the login route with a message
-            return redirect()->route('login')->with('message', 'Your account needs admin approval.');
-        }
+         // Check if the user is authenticated and approved
+         if (Auth::guard('web')->check() && Auth::guard('web')->user()->status !== 'approved') {
+             Auth::guard('web')->logout();
+             return redirect()->route('login')->with('message', 'Your account needs admin approval.');
+         }
 
-        return $next($request);
-    }
+         return $next($request);
+     }
 }

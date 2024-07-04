@@ -2,26 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\News;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+
 class DashboardController extends Controller
 {
     public function index(){
-        if(Auth::id()){
-            $usertype = auth()->user()->usertype;
-            if($usertype === 'user'){
-              return view('dashboard');
-            }
-            else if($usertype == 'admin'){
-              return view('admin.adminhome');
-            }
-            else if($usertype == 'moderator'){
-                return view('moderator.moderatorhome');
-              }
-            else{
-                return redirect()->back();
-            }
-        }
+        $news = News::all();
+        return view('dashboard', compact('news'));
     }
 }

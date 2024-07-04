@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
 use function Laravel\Prompts\alert;
-use Closure;
-
+use App\Http\Controllers\Controller;
+use App\Notifications\UserApprovedNotification;
 
 class LoginController extends Controller
 {
     public function __construct()
-    {   $this->middleware(['guest']);
+    {
+        $this->middleware(['guest']);
 
     }
     public function index(){
@@ -34,8 +36,25 @@ class LoginController extends Controller
             return back()->with('status','Nevalidan unos podataka');
        }
 
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
 
+    }
+    public function update( $request,User $user){
+        $request->validate([
+            'status' => 'required|string|in:approved,pending,denied',
+        ]);
+
+        // Update the user's status
+        $user->status = $request->input('status');
+        $user->save();
+
+        // Check if the user's status is 'approved'
+        if ($user->status == 'approved') {
+            // Notify the user about the approval
+            $user->notify(new UserApprovedNotification($user));
+        }
+
+        return response()->json(['message' => 'User status updated successfully'], 200);
     }
 
 }
